@@ -1,0 +1,19 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/healthz",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "ADMIN_PASSWORD",
+      "description": "Admin login password for the SpiderPanel web UI. Defaults to 'admin' if not set.",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    },
+    {
+      "name": "SECRET_KEY",
+      "description": "Secret key used for password hashing and session signing. Defaults to a built-in value if not set.",
+      "requiredAtBoot": false,
+      "generatedForDevelopment": false
+    }
+  ]
+}

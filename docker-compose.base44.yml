@@ -1,0 +1,27 @@
+# Base44 development compose — runs SpiderPanel from cloned source with live reload.
+services:
+  panel:
+    image: python:3.13-slim
+    working_dir: /app
+    restart: on-failure
+    ports:
+      - "3000:8080"
+    volumes:
+      - ./:/app
+      - spider_data:/data
+    environment:
+      - DATA_DIR=/data
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - SECRET_KEY=${SECRET_KEY:-spider-panel-secret-key-v2}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    command: ["sh", "-ec", "pip install --no-cache-dir -r requirements.txt && exec python -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload --reload-dir /app"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/healthz', timeout=5).read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  spider_data:
